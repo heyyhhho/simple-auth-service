@@ -1,0 +1,183 @@
+openapi: 3.0.0
+info:
+  title: Simple Auth Service API - SAS
+  version: 0.1.0
+  description: SAS API specification
+  contact:
+    name: name
+    email: email@mail.com
+servers:
+  - description: SAS server
+    url: https://{baseUrl}/{basePath}
+    variables:
+      baseUrl:
+        default: localhost:8080
+      basePath:
+        default: api/v1
+paths:
+  /session:
+    post:
+      summary: Checking auth session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  $ref: '#/components/schemas/Token'
+                user_uuid:
+                  $ref: '#/components/schemas/UserUUID'
+                device_id:
+                  $ref: '#/components/schemas/DeviceID'
+      responses:
+        '200':
+          description: Auth token validation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    $ref: '#/components/schemas/Token'
+                  state:
+                    $ref: '#/components/schemas/State'
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+        '400':
+          description: Request is wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+    put:
+      summary: Create new auth session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_uuid:
+                  $ref: '#/components/schemas/UserUUID'
+                device_id:
+                  $ref: '#/components/schemas/DeviceID'
+                ttl:
+                  $ref: '#/components/schemas/TTL'
+      responses:
+        '200':
+          description: Auth session creation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    $ref: '#/components/schemas/Token'
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+        '400':
+          description: Request is wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+    delete:
+      summary: Invalidate auth session
+      description: Invalidate type depends on request params. We can invalidate all auth sessions for user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_uuid:
+                  $ref: '#/components/schemas/UserUUID'
+                device_id:
+                  $ref: '#/components/schemas/DeviceID'
+                token:
+                  $ref: '#/components/schemas/Token'
+      responses:
+        '200':
+          description: Auth session invalidation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    $ref: '#/components/schemas/Token'
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+        '400':
+          description: Request is wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    $ref: '#/components/schemas/StatusCode'
+components:
+  schemas:
+    StatusCode:
+      type: integer
+      description: Response status code. 200 - All is ok, 400 - Bad request, 500 - Internal error
+      enum:
+        - 200
+        - 400
+        - 500
+    Token:
+      type: string
+      description: Auth token
+    State:
+      type: string
+      description: Token Validation State
+      enum:
+        - valid
+        - invalid
+    DeviceID:
+      type: string
+      description: Device Id
+    UserUUID:
+      type: string
+      description: User UUID
+    TTL:
+      type: integer
+      description: Ttl in seconds

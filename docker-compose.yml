@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  mysql-server:
+    container_name: sas_mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: 'sessions'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - 3306:3306
+    volumes:
+      - ./.storages/mysql-dump:/docker-entrypoint-initdb.d
+      - ./.storages/mysql:/var/lib/mysql

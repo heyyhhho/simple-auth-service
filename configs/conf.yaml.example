@@ -1,0 +1,18 @@
+---
+database:
+  master:
+    addr: localhost:8080
+    username: user
+    password: user
+    dbname: sessions
+    charset: utf8mb4
+    collation: utf8mb4_unicode_ci
+    timeout: 1
+  slave:
+    addr: localhost:8080
+    username: user
+    password: user
+    dbname: sessions
+    charset: utf8mb4
+    collation: utf8mb4_unicode_ci
+    timeout: 1
